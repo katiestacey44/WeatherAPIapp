@@ -47,18 +47,11 @@ WeatherAppAPI Login
 Username: Katiestacey44@gmail.com
 Password: Project357
 
-open weathermap api
-https://home.openweathermap.org/api_keys
-username:Katie44
-email:katiestacey44@gmail.com
-password: 357_Password
 
-example call : https://api.openweathermap.org/data/2.5/forecast?lat=44.34&lon=10.99&appid=705e67aa2bc71c3365d2506669ffa0d1
-api key: 705e67aa2bc71c3365d2506669ffa0d1
  */
 /*
 task 1: connect to API [X]
-task 2: ensure that API will update screen
+task 2: ensure that API will update screen [X]
 task 3: create search screen
 task 4: make search screen contents and connections to desired other activities
 task 5: ensure that search screen will search locations
