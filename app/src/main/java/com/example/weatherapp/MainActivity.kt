@@ -50,13 +50,13 @@ Password: 357_Project
 
  */
 /*
-task 1: connect to API [X] //katie
-task 2: ensure that API will update screen [X] //katie
-task 3: create search bar [x]// katie
-task 4: make a favorite location button [X]// katie and components(needs doing)
-task 5: ensure that search bar will search locations [X] //katie
-Task 6: ensure that Search bar will update weatherapp screen //katie
-task 7: connect to firebase
+task 1: connect to API [X] -- katie
+task 2: ensure that API will update screen [X] -- katie
+task 3: create search bar [x]-- katie
+task 4: make a favorite location button [X]-- katie and components(needs doing)
+task 5: ensure that search bar will search locations [X] --katie
+Task 6: ensure that Search bar will update weather app screen --katie
+task 7: connect to firebase [X] -- katie
 task 8: create register and login activity
 task 9: make contents for register screen
 task 10: make contents for login screen
