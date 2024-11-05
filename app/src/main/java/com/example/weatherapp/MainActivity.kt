@@ -70,18 +70,18 @@ https://www.weatherapi.com/my/fields.asp
 
 WeatherAppAPI Login
 Username: Katiestacey44@gmail.com
-Password: Project357
+Password: 357_Project
 
 
  */
 /*
-task 1: connect to API [X]
-task 2: ensure that API will update screen [X]
-task 3: create search screen
-task 4: make search screen contents and connections to desired other activities
-task 5: ensure that search screen will search locations
-Task 6: ensure that Search Screen will update weatherapp screen
-task 7: connect to firebase
+task 1: connect to API [X] -- katie
+task 2: ensure that API will update screen [X] -- katie
+task 3: create search bar [x]-- katie
+task 4: make a favorite location button [X]-- katie and components(needs doing)
+task 5: ensure that search bar will search locations [X] --katie
+Task 6: ensure that Search bar will update weather app screen --katie
+task 7: connect to firebase [X] -- katie
 task 8: create register and login activity
 task 9: make contents for register screen
 task 10: make contents for login screen
