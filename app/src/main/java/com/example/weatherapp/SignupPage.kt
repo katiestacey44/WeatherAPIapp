@@ -19,13 +19,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
+import androidx.navigation.NavController
 
 @Composable
-fun UserLogin(modifier: Modifier = Modifier, vm: AuthViewModel, navController: NavHostController, onLoginSuccess: (String, String) -> Unit) {
+fun UserSignup(modifier: Modifier = Modifier, navController: NavController, vm: AuthViewModel = AuthViewModel(), onLoginSuccess: (String, Any?) -> Unit) {
+    var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    val authSuccess = vm.authSuccess.observeAsState()
+    var confirmPassword by remember { mutableStateOf("") }
     val authError = vm.authError.observeAsState()
 
     Column(
@@ -35,20 +36,43 @@ fun UserLogin(modifier: Modifier = Modifier, vm: AuthViewModel, navController: N
         horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
     )
     {
-        Text("Login", fontSize = 20.sp)
-
-        Spacer(modifier = Modifier.padding(vertical = 10.dp))
-
-        OutlinedTextField(email,
-            isError = authSuccess.value == false,
-            onValueChange = { email = it },
-            label = { Text("Email") })
+        Text(
+            "Sign Up",
+            fontSize = 20.sp
+        )
 
         Spacer(modifier = Modifier.padding(vertical = 10.dp))
 
         OutlinedTextField(
-            password, isError = authSuccess.value == false, onValueChange = { password = it },
-            label = { Text("Password") }, visualTransformation = PasswordVisualTransformation()
+            value = name,
+            onValueChange = { name = it },
+            label = { Text("Name") }
+        )
+
+        Spacer(modifier = Modifier.padding(vertical = 10.dp))
+
+        OutlinedTextField(
+            value = email,
+            onValueChange = { email = it },
+            label = { Text("Email") }
+        )
+
+        Spacer(modifier = Modifier.padding(vertical = 10.dp))
+
+        OutlinedTextField(
+            value = password,
+            onValueChange = { password = it },
+            visualTransformation = PasswordVisualTransformation(),
+            label = { Text("Password") }
+        )
+
+        Spacer(modifier = Modifier.padding(vertical = 10.dp))
+
+        OutlinedTextField(
+            value = confirmPassword,
+            onValueChange = { confirmPassword = it },
+            visualTransformation = PasswordVisualTransformation(),
+            label = { Text("Confirm Password") }
         )
 
         Spacer(modifier = Modifier.padding(vertical = 10.dp))
@@ -61,26 +85,25 @@ fun UserLogin(modifier: Modifier = Modifier, vm: AuthViewModel, navController: N
             )
         }
 
-        Spacer(modifier = Modifier.padding(vertical = 10.dp))
-
         Row {
             Button(onClick = {
-                vm.login(email, password) { uid, name ->
-                    onLoginSuccess(uid.toString(), name.toString())
+                vm.signup(name, email, password, confirmPassword) { uid, name ->
+                    onLoginSuccess(uid, name)
                 }
             })
             {
-                Text("Login")
+                Text("Sign Up")
             }
 
             Spacer(modifier = Modifier.padding(horizontal = 16.dp))
 
             Button(onClick = {
-                navController.navigate(route = "signup")
+                navController.navigate(route = "login")
             })
             {
-                Text("Sign Up")
+                Text("Login")
             }
         }
+
     }
 }
