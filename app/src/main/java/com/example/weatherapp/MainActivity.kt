@@ -103,6 +103,18 @@ task 16: create notification messages based on current weather
 task 17: create notification alerts
 task 18: create navController to navigate between screens [X] -- gabbi
 task 19: create logout option/button
+task 20: update presentation:
+    1: project overview
+    2: api info
+    3: project features
+    4: project demo
+    5: update app architechture
+task 21: draft project tutorial
+    1: overview
+    2. getting started
+    3: step by step instructions
+    4: further discussion
+    5: references
 
 
 
