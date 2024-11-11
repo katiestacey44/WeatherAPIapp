@@ -87,29 +87,30 @@ Password: 357_Project
 task 1: connect to API [X] -- katie
 task 2: ensure that API will update screen [X] -- katie
 task 3: create search bar [x]-- katie
-task 4: make a favorite location button [X]-- katie and components(needs doing)
-task 5: ensure that search bar will search locations [X] --katie
-Task 6: ensure that Search bar will update weather app screen --katie
-task 7: connect to firebase [X] -- katie
-task 8: create register and login activity [X] -- gabbi
-task 9: make contents for register screen
-task 10: make contents for login screen
-task 11: ensure that firebase will save registered users [X] -- gabbi
-task 12: create firestore database for locations saved
-task 13: create a save location option on search screen
-task 14: ensure that locations are being saved in the firestore database
-task 15: ensure that the saved locations is displays on the screen
-task 16: create notification messages based on current weather
-task 17: create notification alerts
-task 18: create navController to navigate between screens [X] -- gabbi
-task 19: create logout option/button
-task 20: update presentation:
+task 4: make a favorite location button [X]-- katie
+task 5: make favorite button components with funcationality
+task 6: ensure that search bar will search locations [X] --katie
+Task 7: ensure that Search bar will update weather app screen --katie
+task 8: connect to firebase [X] -- katie
+task 9: create register and login activity [X] -- gabbi
+task 10: make contents for register screen
+task 11: make contents for login screen
+task 12: ensure that firebase will save registered users [X] -- gabbi
+task 13: create firestore database for locations saved
+task 14: create a save location option on search screen
+task 15: ensure that locations are being saved in the firestore database
+task 16: ensure that the saved locations is displays on the screen
+task 17: create notification messages based on current weather
+task 18: create notification alerts
+task 19: create navController to navigate between screens [X] -- gabbi
+task 20: create logout option/button
+task 21: update presentation:
     1: project overview
     2: api info
     3: project features
     4: project demo
     5: update app architechture
-task 21: draft project tutorial
+task 22: draft project tutorial
     1: overview
     2. getting started
     3: step by step instructions
