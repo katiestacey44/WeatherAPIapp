@@ -14,10 +14,12 @@ import kotlinx.coroutines.launch
 class WeatherViewModel : ViewModel() {
     private val weatherApi = RetrofitInstance.weatherApi
     private val _weatherResult = MutableLiveData<NetworkResponse<WeatherModel>>()
-    val weatherResult: LiveData<NetworkResponse<WeatherModel>> = _weatherResult
+   val weatherResult : LiveData<NetworkResponse<WeatherModel>> = _weatherResult
+
 
     fun getData(city: String) {
         _weatherResult.value = NetworkResponse.Loading
+
 
         viewModelScope.launch {
             try {
@@ -26,11 +28,16 @@ class WeatherViewModel : ViewModel() {
                     response.body()?.let {
                         _weatherResult.value = NetworkResponse.Success(it)
                     }
+
                 } else {
-                    _weatherResult.value = NetworkResponse.Error("Failed to load Data :/, please try again")
+                    _weatherResult.value =
+                        NetworkResponse.Error("failed to load Data :/, please try again")
                 }
-            } catch (e: Exception) {
-                _weatherResult.value = NetworkResponse.Error("Failed to load Data :/, please try again")
+            }
+            catch (e : Exception){
+                _weatherResult.value =
+                    NetworkResponse.Error("failed to load Data :/, please try again")
+
             }
         }
     }

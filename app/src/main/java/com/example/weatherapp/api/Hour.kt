@@ -1,6 +1,8 @@
 package com.example.weatherapp.api
 
-data class Current(
+data class Hour(
+    val chance_of_rain: String,
+    val chance_of_snow: String,
     val cloud: String,
     val condition: Condition,
     val dewpoint_c: String,
@@ -13,17 +15,20 @@ data class Current(
     val heatindex_f: String,
     val humidity: String,
     val is_day: String,
-    val last_updated: String,
-    val last_updated_epoch: String,
     val precip_in: String,
     val precip_mm: String,
     val pressure_in: String,
     val pressure_mb: String,
+    val snow_cm: String,
     val temp_c: String,
     val temp_f: String,
+    val time: String,
+    val time_epoch: String,
     val uv: String,
     val vis_km: String,
     val vis_miles: String,
+    val will_it_rain: String,
+    val will_it_snow: String,
     val wind_degree: String,
     val wind_dir: String,
     val wind_kph: String,
