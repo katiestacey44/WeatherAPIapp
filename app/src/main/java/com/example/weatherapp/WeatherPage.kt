@@ -154,8 +154,8 @@ fun WeatherDetails(data: WeatherModel) {
                 fontWeight = FontWeight.Bold,
                 color = Color.Blue
             )
-            AsyncImage(
-                modifier = Modifier.size(100.dp),
+            AsyncImage( // fix
+                modifier = Modifier.size(50.dp),
                 model = "https:${data.current.condition.icon}".replace("64x64", "128x128"),
                 contentDescription = "Condition Icon"
             )
@@ -188,8 +188,8 @@ fun WeatherDetails(data: WeatherModel) {
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceAround
                     ) {
-                        weatherKeyVal("Wind Chill", "${data.current.windchill_f}°F")
-                        weatherKeyVal("Wind Gust", "${data.current.wind_mph} mph")
+                        weatherKeyVal("Sunrise", data.forecast.forecastday[0].astro.sunrise)
+                        weatherKeyVal("Sunset", data.forecast.forecastday[0].astro.sunset)
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Row( // add different info
@@ -197,8 +197,20 @@ fun WeatherDetails(data: WeatherModel) {
                         horizontalArrangement = Arrangement.SpaceAround
                     ) {
                         weatherKeyVal("Wind Chill", "${data.current.windchill_f}°F")
-                        weatherKeyVal("Wind Gust", "${data.current.wind_mph} mph")
+                        weatherKeyVal("Feels like", "${data.forecast.forecastday[0].hour[0].pressure_in}°F")
                     }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Row(modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.Bottom,
+                        horizontalArrangement = Arrangement.Center){
+                        Text(
+                            text = "5-Day Forecast",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.DarkGray
+                        )}
+                    Spacer(modifier = Modifier.height(10.dp))
+
                 }
             }
         }
