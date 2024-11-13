@@ -92,7 +92,7 @@ task 5: make favorite button components with funcationality
 task 6: ensure that search bar will search locations [X] --katie
 Task 7: ensure that Search bar will update weather app screen --katie
 task 8: connect to firebase [X] -- katie
-task 9: add more info and 5 day forcast
+task 9: add more info and 5 day forcast -- katie (2 days done)
 task 10: create register and login activity [X] -- gabbi
 task 11: make contents for register screen
 task 12: make contents for login screen
