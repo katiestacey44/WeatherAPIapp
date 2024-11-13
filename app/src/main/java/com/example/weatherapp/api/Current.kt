@@ -1,7 +1,7 @@
 package com.example.weatherapp.api
 
 data class Current(
-    val cloud: String,
+    val cloud: Int,
     val condition: Condition,
     val dewpoint_c: String,
     val dewpoint_f: String,
