@@ -16,6 +16,8 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.example.weatherapp.api.NetworkResponse
 import com.example.weatherapp.api.WeatherModel
+import java.text.SimpleDateFormat
+import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,7 +28,7 @@ fun WeatherPage(viewModel: WeatherViewModel) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(1.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // Search Row
@@ -101,8 +103,12 @@ fun WeatherPage(viewModel: WeatherViewModel) {
     }
 }
 
+
+
 @Composable
 fun WeatherDetails(data: WeatherModel) {
+    val dateFormatter = SimpleDateFormat("EEE", Locale.getDefault()) // "EEE" gives the abbreviated weekday name (Mon, Tue, etc.)
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -127,22 +133,22 @@ fun WeatherDetails(data: WeatherModel) {
                 )
                 Spacer(modifier = Modifier.width(8.dp))
 
-                Row{
+                Row {
                     Text(
                         text = data.location.name,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold
                     )
                 }
-
             }
-            Row(modifier = Modifier.fillMaxWidth(),
+            Row(
+                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.Bottom,
-                horizontalArrangement = Arrangement.Center){
+                horizontalArrangement = Arrangement.Center
+            ) {
                 Text(
                     text = data.location.country,
                     fontSize = 15.sp,
-                    //fontWeight = FontWeight.Bold
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
@@ -154,7 +160,7 @@ fun WeatherDetails(data: WeatherModel) {
                 fontWeight = FontWeight.Bold,
                 color = Color.Blue
             )
-            AsyncImage( // fix
+            AsyncImage(
                 modifier = Modifier.size(50.dp),
                 model = "https:${data.current.condition.icon}".replace("64x64", "128x128"),
                 contentDescription = "Condition Icon"
@@ -192,7 +198,7 @@ fun WeatherDetails(data: WeatherModel) {
                         weatherKeyVal("Sunset", data.forecast.forecastday[0].astro.sunset)
                     }
                     Spacer(modifier = Modifier.height(8.dp))
-                    Row( // add different info
+                    Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceAround
                     ) {
@@ -200,22 +206,49 @@ fun WeatherDetails(data: WeatherModel) {
                         weatherKeyVal("Feels like", "${data.forecast.forecastday[0].hour[0].pressure_in}°F")
                     }
                     Spacer(modifier = Modifier.height(16.dp))
-                    Row(modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.Bottom,
-                        horizontalArrangement = Arrangement.Center){
-                        Text(
-                            text = "5-Day Forecast",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.DarkGray
-                        )}
-                    Spacer(modifier = Modifier.height(10.dp))
-
                 }
             }
+
+            // 5-Day Forecast
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween // Use SpaceBetween to distribute items evenly
+            ) {
+                // Iterate over the forecast days (1 through 4)
+                data.forecast.forecastday.drop(1).take(5).forEach { forecastDay ->
+                    Column(
+                        modifier = Modifier.weight(1f), // Each column gets equal width
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        // Convert the date to a weekday name (Mon, Tue, etc.)
+                        val weekdayName = try {
+                            val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(forecastDay.date)
+                            date?.let { dateFormatter.format(it) } ?: ""
+                        } catch (e: Exception) {
+                            ""
+                        }
+
+                        Text(
+                            text = weekdayName,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = "${forecastDay.day.avgtemp_f}°F",
+                            fontSize = 16.sp,
+                            color = Color.Blue
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
         }
     }
 }
+
 
 @Composable
 fun weatherKeyVal(key: String, value: String) {
