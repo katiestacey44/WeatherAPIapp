@@ -145,17 +145,19 @@ task 14: create firestore database for locations saved
 task 15: create a save location option on search screen
 task 16: ensure that locations are being saved in the firestore database
 task 17: ensure that the saved locations is displays on the screen
-task 18: create notification messages based on current weather
-task 19: create notification alerts
-task 20: create navController to navigate between screens [X] -- gabbi
-task 21: create logout option/button
-task 22: update presentation:
+task 18: add way to view current location --katie
+task 19: added notification option button -- katie
+task 20: create notification messages based on current weather
+task 21: create notification alerts
+task 22: create navController to navigate between screens [X] -- gabbi
+task 23: create logout option/button --katie
+task 24: update presentation:
     1: project overview
     2: api info
     3: project features
     4: project demo
     5: update app architechture
-task 23: draft project tutorial
+task 25: draft project tutorial
     1: overview
     2. getting started
     3: step by step instructions
