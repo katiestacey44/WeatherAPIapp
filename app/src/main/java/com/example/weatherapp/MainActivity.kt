@@ -164,10 +164,9 @@ task 25: draft project tutorial
     4: further discussion
     5: references
 
-
-
 additional tasks:
 make it look pretty
+--scrolling ability?
 
 
  */
