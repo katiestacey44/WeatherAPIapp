@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -26,6 +27,7 @@ import java.util.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WeatherPage(viewModel: WeatherViewModel) {
+    val context = LocalContext.current
     var city by remember { mutableStateOf("") }
     val weatherResult by viewModel.weatherResult.observeAsState()
     var showMenu by remember { mutableStateOf(false) }
@@ -128,7 +130,7 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                                 fontWeight = FontWeight.Medium,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clickable { /* Handle view current location */ }
+                                    .clickable { (context as? MainActivity)?.requestLocationPermission() }
                                     .padding(vertical = 8.dp)
                             )
                         }
@@ -325,6 +327,8 @@ fun WeatherDetails(data: WeatherModel) {
         }
     }
 }
+
+
 
 
 @Composable
