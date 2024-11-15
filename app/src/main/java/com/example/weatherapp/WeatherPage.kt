@@ -1,6 +1,8 @@
 package com.example.weatherapp
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.material.icons.Icons
@@ -8,11 +10,13 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import coil3.compose.AsyncImage
 import com.example.weatherapp.api.NetworkResponse
 import com.example.weatherapp.api.WeatherModel
@@ -24,6 +28,7 @@ import java.util.*
 fun WeatherPage(viewModel: WeatherViewModel) {
     var city by remember { mutableStateOf("") }
     val weatherResult by viewModel.weatherResult.observeAsState()
+    var showMenu by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -37,21 +42,19 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                 .fillMaxWidth()
                 .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween // Updated for spacing between elements
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            // Search Bar
             OutlinedTextField(
                 modifier = Modifier.weight(1f),
                 value = city,
                 onValueChange = { city = it },
-                label = { Text(text = "Search Location") },
+                label = { Text("Search Location") },
                 colors = TextFieldDefaults.textFieldColors(
                     focusedIndicatorColor = Color.Blue,
                     unfocusedIndicatorColor = Color.Gray,
                     cursorColor = Color.Blue
                 )
             )
-            // Search Button
             IconButton(onClick = { viewModel.getData(city) }) {
                 Icon(
                     imageVector = Icons.Filled.Search,
@@ -59,17 +62,79 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                     tint = Color.Blue
                 )
             }
-            // Menu Icon
-            IconButton(onClick = { /* Handle menu click here */ }) {
+            IconButton(onClick = { showMenu = !showMenu }) {
                 Icon(
                     imageVector = Icons.Filled.Menu,
                     contentDescription = "Menu",
                     tint = Color.Blue
                 )
             }
+        }
 
-
-
+        // Menu Options
+        if (showMenu) {
+            Dialog(
+                onDismissRequest = { showMenu = false },
+                content = {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                            .clip(RoundedCornerShape(8.dp)),
+                        colors = CardDefaults.cardColors(containerColor = Color.White)
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(16.dp)
+                        ) {
+                            Text(
+                                text = "Menu",
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(bottom = 8.dp)
+                            )
+                            Divider(
+                                modifier = Modifier.padding(vertical = 8.dp),
+                                color = Color.Gray.copy(alpha = 0.3f)
+                            )
+                            Text(
+                                text = "Logout",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Medium,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable { /* Handle logout */ }
+                                    .padding(vertical = 8.dp)
+                            )
+                            Divider(
+                                modifier = Modifier.padding(vertical = 8.dp),
+                                color = Color.Gray.copy(alpha = 0.3f)
+                            )
+                            Text(
+                                text = "Notifications",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Medium,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable { /* Handle notifications */ }
+                                    .padding(vertical = 8.dp)
+                            )
+                            Divider(
+                                modifier = Modifier.padding(vertical = 8.dp),
+                                color = Color.Gray.copy(alpha = 0.3f)
+                            )
+                            Text(
+                                text = "View Current Location",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Medium,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable { /* Handle view current location */ }
+                                    .padding(vertical = 8.dp)
+                            )
+                        }
+                    }
+                }
+            )
         }
 
 
