@@ -37,8 +37,9 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                 .fillMaxWidth()
                 .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly
+            horizontalArrangement = Arrangement.SpaceBetween // Updated for spacing between elements
         ) {
+            // Search Bar
             OutlinedTextField(
                 modifier = Modifier.weight(1f),
                 value = city,
@@ -50,6 +51,7 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                     cursorColor = Color.Blue
                 )
             )
+            // Search Button
             IconButton(onClick = { viewModel.getData(city) }) {
                 Icon(
                     imageVector = Icons.Filled.Search,
@@ -57,7 +59,19 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                     tint = Color.Blue
                 )
             }
+            // Menu Icon
+            IconButton(onClick = { /* Handle menu click here */ }) {
+                Icon(
+                    imageVector = Icons.Filled.Menu,
+                    contentDescription = "Menu",
+                    tint = Color.Blue
+                )
+            }
+
+
+
         }
+
 
         // Add Favorite Location
         Row(
@@ -65,7 +79,6 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                 .fillMaxWidth()
                 .padding(vertical = 10.dp),
             verticalAlignment = Alignment.CenterVertically,
-
         ) {
             Icon(
                 imageVector = Icons.Filled.Favorite,
@@ -102,7 +115,6 @@ fun WeatherPage(viewModel: WeatherViewModel) {
         }
     }
 }
-
 
 
 @Composable
