@@ -149,7 +149,7 @@ fun WeatherPage(viewModel: WeatherViewModel) {
         ) {
             Icon(
                 imageVector = Icons.Filled.Favorite,
-                contentDescription = "Add Favorite Location",
+                contentDescription = "Add to Favorite Location",
                 tint = Color.Red,
                 modifier = Modifier.size(20.dp)
             )
