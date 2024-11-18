@@ -1,5 +1,6 @@
 package com.example.weatherapp
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,7 +32,7 @@ fun WeatherPage(viewModel: WeatherViewModel) {
     var city by remember { mutableStateOf("") }
     val weatherResult by viewModel.weatherResult.observeAsState()
     var showMenu by remember { mutableStateOf(false) }
-
+    var showNotificationsDialog by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -117,9 +118,22 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                                 fontWeight = FontWeight.Medium,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clickable { /* Handle notifications */ }
+                                    .clickable {
+                                        showMenu = false
+                                        showNotificationsDialog = true
+                                    }
                                     .padding(vertical = 8.dp)
                             )
+                            if (showNotificationsDialog) {
+                            NotificationsSettingsDialog(
+                                onDismiss = { showNotificationsDialog = false },
+                                onSaveNotification = { time, enabled ->
+                                    // Implement notification scheduling logic here
+                                    // You'll need to use WorkManager or AlarmManager to schedule notifications
+                                    // The frequency parameter can be used to determine repeat interval
+                                }
+                            )
+                        }
                             Divider(
                                 modifier = Modifier.padding(vertical = 8.dp),
                                 color = Color.Gray.copy(alpha = 0.3f)
@@ -132,6 +146,7 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                                     .fillMaxWidth()
                                     .clickable { (context as? MainActivity)?.requestLocationPermission() }
                                     .padding(vertical = 8.dp)
+
                             )
                         }
                     }
@@ -339,5 +354,136 @@ fun weatherKeyVal(key: String, value: String) {
     ) {
         Text(text = value, fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color.Blue)
         Text(text = key, fontSize = 14.sp, fontWeight = FontWeight.Medium, color = Color.DarkGray)
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun NotificationsSettingsDialog(
+    onDismiss: () -> Unit,
+    onSaveNotification: (String, Boolean) -> Unit
+) {
+    var selectedHour by remember { mutableStateOf(12) }
+    var selectedMinute by remember { mutableStateOf(0) }
+    var isAm by remember { mutableStateOf(true) }
+    var enableNotifications by remember { mutableStateOf(true) }
+
+
+
+    Dialog(onDismissRequest = onDismiss) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .clip(RoundedCornerShape(8.dp)),
+            colors = CardDefaults.cardColors(containerColor = Color.White)
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Notification Settings",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+
+                // Notifications Toggle
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text("Enable Notifications", fontWeight = FontWeight.Medium)
+                    Switch(
+                        checked = enableNotifications,
+                        onCheckedChange = { enableNotifications = it }
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Time Selection (conditionally enabled)
+                if (enableNotifications) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        // Hour Selector
+                        Box(
+                            modifier = Modifier
+                                .width(50.dp)
+                                .border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
+                        ) {
+                            Text(
+                                text = "%02d".format(selectedHour),
+                                modifier = Modifier
+                                    .clickable { selectedHour = (selectedHour % 12) + 1 }
+                                    .padding(8.dp),
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                        Text(" : ", fontSize = 20.sp)
+                        // Minute Selector
+                        Box(
+                            modifier = Modifier
+                                .width(50.dp)
+                                .border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
+                        ) {
+                            Text(
+                                text = "%02d".format(selectedMinute),
+                                modifier = Modifier
+                                    .clickable { selectedMinute = (selectedMinute + 15) % 60 }
+                                    .padding(8.dp),
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                        // AM/PM Selector
+                        Box(
+                            modifier = Modifier
+                                .width(50.dp)
+                                .border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
+                                .clickable { isAm = !isAm }
+                        ) {
+                            Text(
+                                text = if (isAm) "AM" else "PM",
+                                modifier = Modifier.padding(8.dp),
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                }
+
+
+
+                // Action Buttons
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    TextButton(onClick = onDismiss) {
+                        Text("Cancel", color = Color.Gray)
+                    }
+                    Button(
+                        onClick = {
+                            val formattedTime = if (enableNotifications) {
+                                "%02d:%02d %s".format(selectedHour, selectedMinute, if (isAm) "AM" else "PM")
+                            } else {
+                                ""
+                            }
+                            onSaveNotification(formattedTime, enableNotifications)
+                            onDismiss()
+                        }
+                    ) {
+                        Text("Save")
+                    }
+                }
+            }
+        }
     }
 }
