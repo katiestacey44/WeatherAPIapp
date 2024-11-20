@@ -23,6 +23,8 @@ import coil3.compose.AsyncImage
 import com.example.weatherapp.api.NetworkResponse
 import com.example.weatherapp.api.WeatherModel
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.LocalTime
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -125,9 +127,10 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                                     .padding(vertical = 8.dp)
                             )
                             if (showNotificationsDialog) {
-                            NotificationsSettingsDialog(
-                                onDismiss = { showNotificationsDialog = false },
-                                onSaveNotification = { time, enabled ->
+                                NotificationsSettingsDialog(
+                                    currentWeatherData = (weatherResult as? NetworkResponse.Success)?.data,
+                                    onDismiss = { showNotificationsDialog = false },
+                                    onSaveNotification = { time, enabled ->
                                     // Implement notification scheduling logic here
                                     // You'll need to use WorkManager or AlarmManager to schedule notifications
                                     // The frequency parameter can be used to determine repeat interval
@@ -360,6 +363,7 @@ fun weatherKeyVal(key: String, value: String) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotificationsSettingsDialog(
+    currentWeatherData: WeatherModel?,
     onDismiss: () -> Unit,
     onSaveNotification: (String, Boolean) -> Unit
 ) {
@@ -367,8 +371,8 @@ fun NotificationsSettingsDialog(
     var selectedMinute by remember { mutableStateOf(0) }
     var isAm by remember { mutableStateOf(true) }
     var enableNotifications by remember { mutableStateOf(true) }
-
-
+    val context = LocalContext.current
+    val scheduler = remember { AndriodAlarmScheduler(context) }
 
     Dialog(onDismissRequest = onDismiss) {
         Card(
@@ -456,10 +460,7 @@ fun NotificationsSettingsDialog(
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
-
                 }
-
-
 
                 // Action Buttons
                 Row(
@@ -471,6 +472,38 @@ fun NotificationsSettingsDialog(
                     }
                     Button(
                         onClick = {
+                            if (enableNotifications && currentWeatherData != null) {
+                                val hour = if (isAm) selectedHour else selectedHour + 12
+                                val alarmTime = LocalDateTime.now()
+                                    .withHour(hour)
+                                    .withMinute(selectedMinute)
+                                    .withSecond(0)
+                                    .withNano(0)
+                                    // Ensure future time
+                                    .let {
+                                        if (it.isBefore(LocalDateTime.now()))
+                                            it.plusDays(1)
+                                        else it
+                                    }
+
+                                val message = "Current Weather: ${currentWeatherData.current.temp_f}°F, " +
+                                        "${currentWeatherData.current.condition.text} " +
+                                        "in ${currentWeatherData.location.name}"
+
+                                val alarmItem = AlarmItem(
+                                    time = alarmTime,
+                                    message = message
+                                )
+                                scheduler.schedule(alarmItem)
+                            } else {
+                                // Create a dummy item to cancel
+                                val dummyItem = AlarmItem(
+                                    time = LocalDateTime.now(),
+                                    message = "Weather Notification"
+                                )
+                                scheduler.cancel(dummyItem)
+                            }
+
                             val formattedTime = if (enableNotifications) {
                                 "%02d:%02d %s".format(selectedHour, selectedMinute, if (isAm) "AM" else "PM")
                             } else {
@@ -487,3 +520,4 @@ fun NotificationsSettingsDialog(
         }
     }
 }
+
