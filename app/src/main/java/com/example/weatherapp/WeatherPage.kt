@@ -1,5 +1,6 @@
 package com.example.weatherapp
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,6 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import com.example.weatherapp.api.NetworkResponse
 import com.example.weatherapp.api.WeatherModel
@@ -26,11 +28,13 @@ import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WeatherPage(viewModel: WeatherViewModel) {
+fun WeatherPage(viewModel: WeatherViewModel, navController: NavHostController) {
     val context = LocalContext.current
     var city by remember { mutableStateOf("") }
     val weatherResult by viewModel.weatherResult.observeAsState()
     var showMenu by remember { mutableStateOf(false) }
+    val favoriteLocations by viewModel.favoriteLocations.observeAsState(emptyList())
+    var isFavorite = favoriteLocations.contains(city)
 
     Column(
         modifier = Modifier
@@ -133,6 +137,19 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                                     .clickable { (context as? MainActivity)?.requestLocationPermission() }
                                     .padding(vertical = 8.dp)
                             )
+                            Divider(
+                                modifier = Modifier.padding(vertical = 8.dp),
+                                color = Color.Gray.copy(alpha = 0.3f)
+                            )
+                            Text(
+                                text = "My Favorites",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Medium,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable { navController.navigate("favorites") }
+                                    .padding(vertical = 8.dp)
+                            )
                         }
                     }
                 }
@@ -144,18 +161,29 @@ fun WeatherPage(viewModel: WeatherViewModel) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 10.dp),
+                .padding(vertical = 10.dp)
+                .clickable {
+                    if (city.isNotEmpty()) {
+                        if (!isFavorite) {
+                            viewModel.addFavorite(city)
+                            Toast.makeText(context, "$city added to favorites", Toast.LENGTH_SHORT).show()
+                        } else {
+                            viewModel.removeFavorite(city)
+                            Toast.makeText(context, "$city removed from favorites", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                },
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
-                imageVector = Icons.Filled.Favorite,
-                contentDescription = "Add to Favorite Location",
-                tint = Color.Red,
+                imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                contentDescription = "Toggle Favorite Location",
+                tint = if (isFavorite) Color.Red else Color.Gray,
                 modifier = Modifier.size(20.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "Add favorite location",
+                text = if (isFavorite) "Remove from favorites" else "Add to favorites",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium,
                 color = Color.Gray

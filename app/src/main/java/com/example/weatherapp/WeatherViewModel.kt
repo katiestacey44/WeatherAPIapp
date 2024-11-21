@@ -15,6 +15,8 @@ class WeatherViewModel : ViewModel() {
     private val weatherApi = RetrofitInstance.weatherApi
     private val _weatherResult = MutableLiveData<NetworkResponse<WeatherModel>>()
     val weatherResult: LiveData<NetworkResponse<WeatherModel>> = _weatherResult
+    private val _favoriteLocations = MutableLiveData<List<String>>(emptyList())
+    val favoriteLocations: LiveData<List<String>> = _favoriteLocations
 
     fun getData(city: String) {
         _weatherResult.value = NetworkResponse.Loading
@@ -56,5 +58,19 @@ class WeatherViewModel : ViewModel() {
                     NetworkResponse.Error("Failed to load data for coordinates: ${e.message}, please try again")
             }
         }
+    }
+
+    // Add location to favorites
+    fun addFavorite(city: String) {
+        val currentFavorites = _favoriteLocations.value.orEmpty().toMutableList()
+        currentFavorites.add(city)
+        _favoriteLocations.value = currentFavorites
+    }
+
+    // Remove Location from favorites
+    fun removeFavorite(city: String) {
+        val currentFavorites = _favoriteLocations.value.orEmpty().toMutableList()
+        currentFavorites.remove(city)
+        _favoriteLocations.value = currentFavorites
     }
 }

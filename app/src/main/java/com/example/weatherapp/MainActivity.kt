@@ -4,13 +4,10 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -97,7 +94,10 @@ fun NavHostScreen(navController: NavHostController, modifier: Modifier = Modifie
     ) {
         NavHost(navController, startDestination = "login") {
             composable("weather-page/{name}/{uid}") {
-                WeatherPage(weatherVM)
+                WeatherPage(weatherVM, navController)
+            }
+            composable("favorites") {
+                FavoritesPage(viewModel = weatherVM, navController = navController)
             }
             composable("login") {
                 UserLogin(modifier = modifier, authVM, navController) { uid, name ->
@@ -132,16 +132,16 @@ task 1: connect to API [X] -- katie
 task 2: ensure that API will update screen [X] -- katie
 task 3: create search bar [x]-- katie
 task 4: make a favorite location button [X]-- katie
-task 5: make favorite button components with funcationality
+task 5: make favorite button components with functionality [X] -- blaze
 task 6: ensure that search bar will search locations [X] --katie
 Task 7: ensure that Search bar will update weather app screen --katie
 task 8: connect to firebase [X] -- katie
-task 9: add more info and 5 day forcast -- katie (2 days done)
+task 9: add more info and 5 day forecast -- katie (2 days done)
 task 10: create register and login activity [X] -- gabbi
 task 11: make contents for register screen
 task 12: make contents for login screen
 task 13: ensure that firebase will save registered users [X] -- gabbi
-task 14: create firestore database for locations saved
+task 14: create firestore database for locations saved [X] -- blaze
 task 15: create a save location option on search screen
 task 16: ensure that locations are being saved in the firestore database
 task 17: ensure that the saved locations is displays on the screen
@@ -156,7 +156,7 @@ task 24: update presentation:
     2: api info
     3: project features
     4: project demo
-    5: update app architechture
+    5: update app architecture
 task 25: draft project tutorial
     1: overview
     2. getting started
