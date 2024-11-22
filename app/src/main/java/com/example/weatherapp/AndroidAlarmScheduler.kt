@@ -7,7 +7,7 @@ import android.content.Intent
 import java.time.ZoneId
 
 
-class AndriodAlarmScheduler (
+class AndroidAlarmScheduler (
     private val context: Context
 ): AlarmScheduler{
 

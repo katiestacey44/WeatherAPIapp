@@ -367,12 +367,14 @@ fun NotificationsSettingsDialog(
     onDismiss: () -> Unit,
     onSaveNotification: (String, Boolean) -> Unit
 ) {
-    var selectedHour by remember { mutableStateOf(12) }
-    var selectedMinute by remember { mutableStateOf(0) }
+    var selectedHour by remember { mutableStateOf("12") }
+    var selectedMinute by remember { mutableStateOf("00") }
     var isAm by remember { mutableStateOf(true) }
-    var enableNotifications by remember { mutableStateOf(true) }
+    var enableNotifications by remember { mutableStateOf(false) }
     val context = LocalContext.current
-    val scheduler = remember { AndriodAlarmScheduler(context) }
+    val scheduler = remember { AndroidAlarmScheduler(context) }
+
+
 
     Dialog(onDismissRequest = onDismiss) {
         Card(
@@ -415,109 +417,114 @@ fun NotificationsSettingsDialog(
                         horizontalArrangement = Arrangement.Center,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        // Hour Selector
-                        Box(
-                            modifier = Modifier
-                                .width(50.dp)
-                                .border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
-                        ) {
-                            Text(
-                                text = "%02d".format(selectedHour),
-                                modifier = Modifier
-                                    .clickable { selectedHour = (selectedHour % 12) + 1 }
-                                    .padding(8.dp),
-                                textAlign = TextAlign.Center
-                            )
-                        }
+                        // Hour Input
+                        OutlinedTextField(
+                            value = selectedHour,
+                            onValueChange = {
+                                if (it.length <= 2 && it.all { char -> char.isDigit() }) {
+                                    val hour = it.toIntOrNull()
+                                    if (hour == null || (hour in 1..12)) {
+                                        selectedHour = it
+                                    }
+                                }
+                            },
+                            label = { Text("Hour") },
+                            modifier = Modifier.width(80.dp),
+                            singleLine = true
+                        )
+
+
                         Text(" : ", fontSize = 20.sp)
-                        // Minute Selector
+
+                        // Minute Input
+                        OutlinedTextField(
+                            value = selectedMinute,
+                            onValueChange = {
+                                if (it.length <= 2 && it.all { char -> char.isDigit() }) {
+                                    selectedMinute = it
+                                }
+                            },
+                            label = { Text("Minute") },
+                            modifier = Modifier.width(80.dp),
+                            singleLine = true
+                        )
+
+                        // AM/PM Toggle
                         Box(
                             modifier = Modifier
-                                .width(50.dp)
-                                .border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
-                        ) {
-                            Text(
-                                text = "%02d".format(selectedMinute),
-                                modifier = Modifier
-                                    .clickable { selectedMinute = (selectedMinute + 15) % 60 }
-                                    .padding(8.dp),
-                                textAlign = TextAlign.Center
-                            )
-                        }
-                        // AM/PM Selector
-                        Box(
-                            modifier = Modifier
-                                .width(50.dp)
-                                .border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
+                                .width(70.dp)
                                 .clickable { isAm = !isAm }
+                                .padding(8.dp),
+                            contentAlignment = Alignment.Center
                         ) {
-                            Text(
-                                text = if (isAm) "AM" else "PM",
-                                modifier = Modifier.padding(8.dp),
-                                textAlign = TextAlign.Center
-                            )
+                            Text(text = if (isAm) "AM" else "PM")
                         }
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
-                }
 
-                // Action Buttons
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    TextButton(onClick = onDismiss) {
-                        Text("Cancel", color = Color.Gray)
-                    }
-                    Button(
-                        onClick = {
-                            if (enableNotifications && currentWeatherData != null) {
-                                val hour = if (isAm) selectedHour else selectedHour + 12
-                                val alarmTime = LocalDateTime.now()
-                                    .withHour(hour)
-                                    .withMinute(selectedMinute)
-                                    .withSecond(0)
-                                    .withNano(0)
-                                    // Ensure future time
-                                    .let {
-                                        if (it.isBefore(LocalDateTime.now()))
-                                            it.plusDays(1)
-                                        else it
-                                    }
-
-                                val message = "Current Weather: ${currentWeatherData.current.temp_f}°F, " +
-                                        "${currentWeatherData.current.condition.text} " +
-                                        "in ${currentWeatherData.location.name}"
-
-                                val alarmItem = AlarmItem(
-                                    time = alarmTime,
-                                    message = message
-                                )
-                                scheduler.schedule(alarmItem)
-                            } else {
-                                // Create a dummy item to cancel
-                                val dummyItem = AlarmItem(
-                                    time = LocalDateTime.now(),
-                                    message = "Weather Notification"
-                                )
-                                scheduler.cancel(dummyItem)
-                            }
-
-                            val formattedTime = if (enableNotifications) {
-                                "%02d:%02d %s".format(selectedHour, selectedMinute, if (isAm) "AM" else "PM")
-                            } else {
-                                ""
-                            }
-                            onSaveNotification(formattedTime, enableNotifications)
-                            onDismiss()
-                        }
+                    // Action Buttons
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text("Save")
+                        TextButton(onClick = onDismiss) {
+                            Text("Cancel", color = Color.Gray)
+                        }
+                        Button(
+                            onClick = {
+                                if (enableNotifications && currentWeatherData != null) {
+                                    val hour = if (isAm) selectedHour.toInt() % 12 else (selectedHour.toInt() % 12) + 12
+                                    val alarmTime = LocalDateTime.now()
+                                        .withHour(hour)
+                                        .withMinute(selectedMinute.toInt())
+                                        .withSecond(0)
+                                        .withNano(0)
+                                        .let {
+                                            if (it.isBefore(LocalDateTime.now())) {
+                                                it.plusDays(1) // Move to the next day if the time has already passed
+                                            } else {
+                                                it
+                                            }
+                                        }
+
+                                    val message =
+                                        "Current Weather: ${currentWeatherData.current.temp_f}°F, " +
+                                                "${currentWeatherData.current.condition.text} " +
+                                                "in ${currentWeatherData.location.name}"
+
+                                    val alarmItem = AlarmItem(
+                                        time = alarmTime,
+                                        message = message
+                                    )
+                                    scheduler.schedule(alarmItem)
+                                } else {
+                                    // Cancel dummy notification
+                                    val dummyItem = AlarmItem(
+                                        time = LocalDateTime.now(),
+                                        message = "Weather Notification"
+                                    )
+                                    scheduler.cancel(dummyItem)
+                                }
+
+                                val formattedTime = if (enableNotifications) {
+                                    "%02d:%02d %s".format(
+                                        selectedHour.toInt(),
+                                        selectedMinute.toInt(),
+                                        if (isAm) "AM" else "PM"
+                                    )
+                                } else {
+                                    ""
+                                }
+                                onSaveNotification(formattedTime, enableNotifications)
+                                onDismiss()
+                            }
+                        ) {
+                            Text("Save")
+                        }
                     }
                 }
             }
         }
     }
 }
-
