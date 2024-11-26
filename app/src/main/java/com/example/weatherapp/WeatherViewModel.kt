@@ -9,9 +9,15 @@ import com.example.weatherapp.api.Constant
 import com.example.weatherapp.api.NetworkResponse
 import com.example.weatherapp.api.RetrofitInstance
 import com.example.weatherapp.api.WeatherModel
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
+import androidx.navigation.NavHostController
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 class WeatherViewModel : ViewModel() {
+    private val db = Firebase.firestore
     private val weatherApi = RetrofitInstance.weatherApi
     private val _weatherResult = MutableLiveData<NetworkResponse<WeatherModel>>()
     val weatherResult: LiveData<NetworkResponse<WeatherModel>> = _weatherResult
@@ -61,10 +67,24 @@ class WeatherViewModel : ViewModel() {
     }
 
     // Add location to favorites
-    fun addFavorite(city: String) {
+    fun addFavorite(city: String, uid: String) {
         val currentFavorites = _favoriteLocations.value.orEmpty().toMutableList()
         currentFavorites.add(city)
         _favoriteLocations.value = currentFavorites
+
+        // add favorite to firebase
+        data class Favorite (
+            val city: String
+        )
+        val favorite = Favorite(city)
+
+        val userGamesCollection = db.collection("users").document(uid).collection("favorites")
+
+        userGamesCollection.add(favorite).addOnSuccessListener { documentReference ->
+            println("Game added with ID: ${documentReference.id}")
+        }.addOnFailureListener { e ->
+            println("Error adding game, $e")
+        }
     }
 
     // Remove Location from favorites

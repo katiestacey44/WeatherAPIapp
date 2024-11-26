@@ -30,6 +30,8 @@ import java.util.*
 @Composable
 fun WeatherPage(viewModel: WeatherViewModel, navController: NavHostController) {
     val context = LocalContext.current
+    val uid = navController.currentBackStackEntry?.arguments?.getString("uid")
+    val name = navController.currentBackStackEntry?.arguments?.getString("name")
     var city by remember { mutableStateOf("") }
     val weatherResult by viewModel.weatherResult.observeAsState()
     var showMenu by remember { mutableStateOf(false) }
@@ -108,7 +110,7 @@ fun WeatherPage(viewModel: WeatherViewModel, navController: NavHostController) {
                                 fontWeight = FontWeight.Medium,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clickable { /* Handle logout */ }
+                                    .clickable { navController.navigate(route = "login") }
                                     .padding(vertical = 8.dp)
                             )
                             Divider(
@@ -165,7 +167,7 @@ fun WeatherPage(viewModel: WeatherViewModel, navController: NavHostController) {
                 .clickable {
                     if (city.isNotEmpty()) {
                         if (!isFavorite) {
-                            viewModel.addFavorite(city)
+                            viewModel.addFavorite(city, uid.toString())
                             Toast.makeText(context, "$city added to favorites", Toast.LENGTH_SHORT).show()
                         } else {
                             viewModel.removeFavorite(city)

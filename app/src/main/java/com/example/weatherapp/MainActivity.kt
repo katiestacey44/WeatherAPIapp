@@ -138,19 +138,19 @@ Task 7: ensure that Search bar will update weather app screen --katie
 task 8: connect to firebase [X] -- katie
 task 9: add more info and 5 day forecast -- katie (2 days done)
 task 10: create register and login activity [X] -- gabbi
-task 11: make contents for register screen
-task 12: make contents for login screen
+task 11: make contents for register screen [X] -- gabbi
+task 12: make contents for login screen [X] -- gabbi
 task 13: ensure that firebase will save registered users [X] -- gabbi
 task 14: create firestore database for locations saved [X] -- blaze
-task 15: create a save location option on search screen
-task 16: ensure that locations are being saved in the firestore database
-task 17: ensure that the saved locations is displays on the screen
+task 15: create a save location option on search screen [X] -- gabbi
+task 16: ensure that locations are being saved in the firestore database [X] -- gabbi
+task 17: ensure that the saved locations is displays on the screen [X] -- gabbi
 task 18: add way to view current location --katie
 task 19: added notification option button -- katie
 task 20: create notification messages based on current weather
 task 21: create notification alerts
 task 22: create navController to navigate between screens [X] -- gabbi
-task 23: create logout option/button --katie
+task 23: create logout option/button [X] --katie and gabbi
 task 24: update presentation:
     1: project overview
     2: api info
