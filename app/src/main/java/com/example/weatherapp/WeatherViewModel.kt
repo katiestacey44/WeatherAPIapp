@@ -12,9 +12,6 @@ import com.example.weatherapp.api.WeatherModel
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
-import androidx.navigation.NavHostController
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
 
 class WeatherViewModel : ViewModel() {
     private val db = Firebase.firestore
@@ -92,5 +89,19 @@ class WeatherViewModel : ViewModel() {
         val currentFavorites = _favoriteLocations.value.orEmpty().toMutableList()
         currentFavorites.remove(city)
         _favoriteLocations.value = currentFavorites
+    }
+
+    fun getFavorites(uid: String) {
+        val favoritesCollection = db.collection("users").document(uid).collection("favorites")
+        favoritesCollection.get()
+            .addOnSuccessListener { querySnapshot ->
+                val favoriteCities = querySnapshot.documents.mapNotNull { document ->
+                    document.getString("city")
+                }
+                _favoriteLocations.value = favoriteCities
+            }
+            .addOnFailureListener { exception ->
+                Log.e("WeatherViewModel", "Error getting favorite cities: $exception")
+            }
     }
 }

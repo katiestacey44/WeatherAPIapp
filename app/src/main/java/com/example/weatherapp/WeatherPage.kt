@@ -31,12 +31,12 @@ import java.util.*
 fun WeatherPage(viewModel: WeatherViewModel, navController: NavHostController) {
     val context = LocalContext.current
     val uid = navController.currentBackStackEntry?.arguments?.getString("uid")
-    val name = navController.currentBackStackEntry?.arguments?.getString("name")
+    // val name = navController.currentBackStackEntry?.arguments?.getString("name")
     var city by remember { mutableStateOf("") }
     val weatherResult by viewModel.weatherResult.observeAsState()
     var showMenu by remember { mutableStateOf(false) }
     val favoriteLocations by viewModel.favoriteLocations.observeAsState(emptyList())
-    var isFavorite = favoriteLocations.contains(city)
+    val isFavorite = favoriteLocations.contains(city)
 
     Column(
         modifier = Modifier
@@ -57,7 +57,7 @@ fun WeatherPage(viewModel: WeatherViewModel, navController: NavHostController) {
                 value = city,
                 onValueChange = { city = it },
                 label = { Text("Search Location") },
-                colors = TextFieldDefaults.textFieldColors(
+                colors = TextFieldDefaults.colors(
                     focusedIndicatorColor = Color.Blue,
                     unfocusedIndicatorColor = Color.Gray,
                     cursorColor = Color.Blue
@@ -100,7 +100,7 @@ fun WeatherPage(viewModel: WeatherViewModel, navController: NavHostController) {
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(bottom = 8.dp)
                             )
-                            Divider(
+                            HorizontalDivider(
                                 modifier = Modifier.padding(vertical = 8.dp),
                                 color = Color.Gray.copy(alpha = 0.3f)
                             )
@@ -113,7 +113,7 @@ fun WeatherPage(viewModel: WeatherViewModel, navController: NavHostController) {
                                     .clickable { navController.navigate(route = "login") }
                                     .padding(vertical = 8.dp)
                             )
-                            Divider(
+                            HorizontalDivider(
                                 modifier = Modifier.padding(vertical = 8.dp),
                                 color = Color.Gray.copy(alpha = 0.3f)
                             )
@@ -126,7 +126,7 @@ fun WeatherPage(viewModel: WeatherViewModel, navController: NavHostController) {
                                     .clickable { /* Handle notifications */ }
                                     .padding(vertical = 8.dp)
                             )
-                            Divider(
+                            HorizontalDivider(
                                 modifier = Modifier.padding(vertical = 8.dp),
                                 color = Color.Gray.copy(alpha = 0.3f)
                             )
@@ -139,7 +139,7 @@ fun WeatherPage(viewModel: WeatherViewModel, navController: NavHostController) {
                                     .clickable { (context as? MainActivity)?.requestLocationPermission() }
                                     .padding(vertical = 8.dp)
                             )
-                            Divider(
+                            HorizontalDivider(
                                 modifier = Modifier.padding(vertical = 8.dp),
                                 color = Color.Gray.copy(alpha = 0.3f)
                             )
@@ -149,7 +149,7 @@ fun WeatherPage(viewModel: WeatherViewModel, navController: NavHostController) {
                                 fontWeight = FontWeight.Medium,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clickable { navController.navigate("favorites") }
+                                    .clickable { viewModel.getFavorites(uid.toString()); navController.navigate("favorites") }
                                     .padding(vertical = 8.dp)
                             )
                         }
@@ -295,24 +295,24 @@ fun WeatherDetails(data: WeatherModel) {
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceAround
                     ) {
-                        weatherKeyVal("Humidity", "${data.current.humidity}%")
-                        weatherKeyVal("Wind Speed", "${data.current.wind_mph} mph")
+                        WeatherKeyVal("Humidity", "${data.current.humidity}%")
+                        WeatherKeyVal("Wind Speed", "${data.current.wind_mph} mph")
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceAround
                     ) {
-                        weatherKeyVal("Sunrise", data.forecast.forecastday[0].astro.sunrise)
-                        weatherKeyVal("Sunset", data.forecast.forecastday[0].astro.sunset)
+                        WeatherKeyVal("Sunrise", data.forecast.forecastday[0].astro.sunrise)
+                        WeatherKeyVal("Sunset", data.forecast.forecastday[0].astro.sunset)
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceAround
                     ) {
-                        weatherKeyVal("Wind Chill", "${data.current.windchill_f}°F")
-                        weatherKeyVal("Feels like", "${data.forecast.forecastday[0].hour[0].pressure_in}°F")
+                        WeatherKeyVal("Wind Chill", "${data.current.windchill_f}°F")
+                        WeatherKeyVal("Feels like", "${data.forecast.forecastday[0].hour[0].pressure_in}°F")
                     }
                     Spacer(modifier = Modifier.height(16.dp))
                 }
@@ -362,7 +362,7 @@ fun WeatherDetails(data: WeatherModel) {
 
 
 @Composable
-fun weatherKeyVal(key: String, value: String) {
+fun WeatherKeyVal(key: String, value: String) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(vertical = 8.dp)
