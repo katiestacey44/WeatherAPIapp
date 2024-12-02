@@ -96,8 +96,9 @@ fun NavHostScreen(navController: NavHostController, modifier: Modifier = Modifie
             composable("weather-page/{name}/{uid}") {
                 WeatherPage(weatherVM, navController)
             }
-            composable("favorites") {
-                FavoritesPage(viewModel = weatherVM, navController = navController)
+            composable("favorites/{uid}") { backStackEntry ->
+                val uid = backStackEntry.arguments?.getString("uid") ?: ""
+                FavoritesPage(viewModel = weatherVM, navController = navController, uid = uid)
             }
             composable("login") {
                 UserLogin(modifier = modifier, authVM, navController) { uid, name ->
@@ -147,8 +148,8 @@ task 16: ensure that locations are being saved in the firestore database [X] -- 
 task 17: ensure that the saved locations is displays on the screen [X] -- gabbi
 task 18: add way to view current location --katie
 task 19: added notification option button -- katie
-task 20: create notification messages based on current weather
-task 21: create notification alerts
+task 20: create notification messages based on current weather [X] -- blaze
+task 21: create notification alerts [X] -- blaze
 task 22: create navController to navigate between screens [X] -- gabbi
 task 23: create logout option/button [X] --katie and gabbi
 task 24: update presentation:

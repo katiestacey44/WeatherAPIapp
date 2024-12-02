@@ -85,10 +85,24 @@ class WeatherViewModel : ViewModel() {
     }
 
     // Remove Location from favorites
-    fun removeFavorite(city: String) {
+    fun removeFavorite(city: String, uid: String) {
         val currentFavorites = _favoriteLocations.value.orEmpty().toMutableList()
         currentFavorites.remove(city)
         _favoriteLocations.value = currentFavorites
+
+        val favoritesCollection = db.collection("users").document(uid).collection("favorites")
+
+        favoritesCollection.whereEqualTo("city", city).get()
+            .addOnSuccessListener { querySnapshot ->
+                val document = querySnapshot.documents.firstOrNull()
+                document?.reference?.delete()
+                    ?.addOnSuccessListener {
+                        Log.d("WeatherViewModel", "Location removed from favorites")
+                    }
+                    ?.addOnFailureListener { e ->
+                        Log.e("WeatherViewModel", "Error removing city from favorites: $e")
+                    }
+            }
     }
 
     fun getFavorites(uid: String) {

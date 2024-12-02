@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 
 @Composable
-fun FavoritesPage(viewModel: WeatherViewModel, navController: NavHostController) {
+fun FavoritesPage(viewModel: WeatherViewModel, navController: NavHostController, uid: String) {
     val favoriteLocationsState = viewModel.favoriteLocations.observeAsState(emptyList())
     val favoriteLocations = favoriteLocationsState.value
 
@@ -64,7 +64,7 @@ fun FavoritesPage(viewModel: WeatherViewModel, navController: NavHostController)
                            fontSize = 18.sp,
                            modifier = Modifier.weight(1f)
                        )
-                       IconButton(onClick = { viewModel.removeFavorite(city.toString()) }) {
+                       IconButton(onClick = { viewModel.removeFavorite(city.toString(), uid) }) {
                            Icon(
                                imageVector = Icons.Filled.Delete,
                                contentDescription = "Remove Favorite",

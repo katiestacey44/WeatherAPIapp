@@ -149,7 +149,7 @@ fun WeatherPage(viewModel: WeatherViewModel, navController: NavHostController) {
                                 fontWeight = FontWeight.Medium,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clickable { viewModel.getFavorites(uid.toString()); navController.navigate("favorites") }
+                                    .clickable { viewModel.getFavorites(uid.toString()); navController.navigate("favorites/${uid.toString()}") }
                                     .padding(vertical = 8.dp)
                             )
                         }
@@ -170,7 +170,7 @@ fun WeatherPage(viewModel: WeatherViewModel, navController: NavHostController) {
                             viewModel.addFavorite(city, uid.toString())
                             Toast.makeText(context, "$city added to favorites", Toast.LENGTH_SHORT).show()
                         } else {
-                            viewModel.removeFavorite(city)
+                            viewModel.removeFavorite(city, uid.toString())
                             Toast.makeText(context, "$city removed from favorites", Toast.LENGTH_SHORT).show()
                         }
                     }
