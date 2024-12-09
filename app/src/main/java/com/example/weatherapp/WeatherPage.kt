@@ -123,7 +123,7 @@ fun WeatherPage(viewModel: WeatherViewModel, navController: NavHostController) {
                                 fontWeight = FontWeight.Medium,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clickable { /* Handle notifications */ }
+                                    .clickable { navController.navigate("notifications-screen/$city") }
                                     .padding(vertical = 8.dp)
                             )
                             HorizontalDivider(

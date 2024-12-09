@@ -22,6 +22,8 @@ import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import android.Manifest
+import android.os.Build
+import androidx.annotation.RequiresApi
 
 
 class MainActivity : ComponentActivity() {
@@ -46,6 +48,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -84,6 +87,7 @@ class MainActivity : ComponentActivity() {
         )
     }
 }
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NavHostScreen(navController: NavHostController, modifier: Modifier = Modifier, weatherVM: WeatherViewModel) {
     val authVM: AuthViewModel = viewModel<AuthViewModel>()
@@ -109,6 +113,10 @@ fun NavHostScreen(navController: NavHostController, modifier: Modifier = Modifie
                 UserSignup(navController = navController) { uid, name ->
                     navController.navigate("weather-page/$name/$uid")
                 }
+            }
+            composable("notifications-screen/{city}") { backStackEntry ->
+                val city = backStackEntry.arguments?.getString("city") ?: "Default City"
+                NotificationScreen(viewModel = weatherVM, navController = navController, city = city)
             }
         }
     }
