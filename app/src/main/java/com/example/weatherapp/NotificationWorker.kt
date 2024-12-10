@@ -10,6 +10,7 @@ import androidx.core.app.NotificationCompat
 import androidx.work.CoroutineWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.example.weatherapp.R
 import com.example.weatherapp.api.WeatherModel
 import com.example.weatherapp.api.Constant
 import com.example.weatherapp.api.NetworkResponse
@@ -23,42 +24,38 @@ class NotificationWorker(context: Context, workerParams: WorkerParameters) : Cor
     override suspend fun doWork(): Result {
         val apiKey = inputData.getString("apiKey") ?: return Result.failure()
         val city = inputData.getString("city") ?: return Result.failure()
-        val days = inputData.getInt("days", 1)
 
         // Fetch weather data
-        val weatherData = getWeatherData(apiKey, city, days) ?: return Result.failure()
-
-        // Send the notification with the fetched weather data
-        sendNotification(weatherData)
-
-        Log.d("NotificationWorker", "Notification sent successfully")
-        return Result.success()
+        val weatherData = getWeatherData(city)
+        if (weatherData != null) {
+            sendNotification(weatherData)
+            Log.d("NotificationWorker", "Notification sent successfully")
+            return Result.success()
+        } else {
+            Log.e("NotificationWorker", "Failed to fetch weather data")
+            return Result.failure()
+        }
     }
 
-    private suspend fun getWeatherData(apiKey: String, city: String, days: Int): WeatherModel? {
-        if (city.isEmpty()) {
-            return null
-        }
-
+    private suspend fun getWeatherData(city: String): WeatherModel? {
         return try {
             val response = withContext(Dispatchers.IO) {
-                RetrofitInstance.weatherApi.getWeather(apiKey, city, days.toString())
+                RetrofitInstance.weatherApi.getWeather(apiKey = "1fc460243bd649d898c163818242810", city = city, days = "1")
             }
-            when (response) {
-                is NetworkResponse.Success<*> -> {
+            if (response.isSuccessful) {
+                response.body()?.also {
                     Log.d("NotificationWorker", "Weather API response successful")
-                    response.body()
                 }
-                else -> {
-                    Log.e("NotificationWorker", "Weather API response failed: $response")
-                    null
-                }
+            } else {
+                Log.e("NotificationWorker", "Weather API response failed. Code: ${response.code()}")
+                null
             }
         } catch (e: Exception) {
-            Log.e("NotificationWorker", "Error fetching weather data: ${e.message}")
+            Log.e("NotificationWorker", "Error fetching weather data: ${e.localizedMessage}")
             null
         }
     }
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun sendNotification(weatherData: WeatherModel) {
@@ -77,9 +74,17 @@ class NotificationWorker(context: Context, workerParams: WorkerParameters) : Cor
             "Weather Notifications",
             NotificationManager.IMPORTANCE_HIGH
         )
+
+        val existingChannel = notificationManager.getNotificationChannel(notificationChannelId)
+        if (existingChannel != null) {
+            Log.d("NotificationWorker", "Notification channel already exists: $notificationChannelId")
+        } else {
+            Log.d("NotificationWorker", "Creating notification channel: $notificationChannelId")
+        }
         notificationManager.createNotificationChannel(channel)
 
         val notification = NotificationCompat.Builder(context, notificationChannelId)
+            .setSmallIcon(R.drawable.ic_weather_icon)
             .setContentTitle("Weather Update")
             .setContentText("Current Temp: $currentTemp°F, Condition: $currentCondition")
             .setPriority(NotificationCompat.PRIORITY_HIGH)

@@ -105,19 +105,6 @@ fun WeatherPage(viewModel: WeatherViewModel, navController: NavHostController) {
                                 color = Color.Gray.copy(alpha = 0.3f)
                             )
                             Text(
-                                text = "Logout",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Medium,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable { navController.navigate(route = "login") }
-                                    .padding(vertical = 8.dp)
-                            )
-                            HorizontalDivider(
-                                modifier = Modifier.padding(vertical = 8.dp),
-                                color = Color.Gray.copy(alpha = 0.3f)
-                            )
-                            Text(
                                 text = "Notifications",
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Medium,
@@ -150,6 +137,19 @@ fun WeatherPage(viewModel: WeatherViewModel, navController: NavHostController) {
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .clickable { viewModel.getFavorites(uid.toString()); navController.navigate("favorites/${uid.toString()}") }
+                                    .padding(vertical = 8.dp)
+                            )
+                            HorizontalDivider(
+                                modifier = Modifier.padding(vertical = 8.dp),
+                                color = Color.Gray.copy(alpha = 0.3f)
+                            )
+                            Text(
+                                text = "Logout",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Medium,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable { navController.navigate(route = "login") }
                                     .padding(vertical = 8.dp)
                             )
                         }
