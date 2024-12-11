@@ -199,4 +199,4 @@ class MainActivity : ComponentActivity() {
 
 
 ---
-Made with ❤️ by Catherine Stacey, Gabbi, Munsong, Blaze Lauer.
+Made with ❤️ by Catherine Stacey, Gabrielle Munson, and Blaze Lauer.
