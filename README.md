@@ -18,6 +18,9 @@ Before starting, ensure you have:
 - WeatherAPI.com account
 - Android device or emulator for testing
 
+  ![Weather Architecture](WeatherArch.png "Weather Architecture Diagram")
+
+
 ## Project Setup
 
 ### Dependencies
