@@ -180,7 +180,7 @@ fun WeatherDetails(data: WeatherModel) {
 }
 ```
 
-### 14. (For setting p current location ability) Setup Location Access
+### 14. (For setting up current location ability) Setup Location Access
 #### Permissions
 Add these permissions to `AndroidManifest.xml`:
 ```xml
