@@ -258,6 +258,10 @@ The complete source code for this project is available on GitHub: [WeatherAPIapp
 - [Android Location Services](https://developer.android.com/training/location)
 - [WeatherAPI Documentation](https://www.weatherapi.com/docs/)
 
+## Youtube Tutorials
+- [Current location](https://www.youtube.com/watch?v=oqrbggPlASs)
+- [Retrofit and api](https://www.google.com/search?q=weather+app+with+retrofit+screen&rlz=1C1GCEA_enUS1045US1045&oq=weather+app+with+retrofot+&gs_lcrp=EgZjaHJvbWUqCQgBECEYChigATIGCAAQRRg5MgkIARAhGAoYoAEyCQgCECEYChigATIJCAMQIRgKGKABMgkIBBAhGAoYoAEyCQgFECEYChirAjIHCAYQIRifBTIHCAcQIRiPAjIHCAgQIRiPAtIBCDg0NDdqMGo3qAIIsAIB&sourceid=chrome&ie=UTF-8#fpstate=ive&vld=cid:5f097b4d,vid:Kn6vUH1uJT4,st:0 )
+
 ## Important Notes
 
 > ⚠️ Remember to replace `YOUR_API_KEY` with your actual WeatherAPI.com API key.
