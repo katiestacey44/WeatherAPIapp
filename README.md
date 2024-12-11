@@ -145,13 +145,8 @@ interface WeatherAPI {
   
   ![APIfolder]( APIFolder.png "API folder")
 
-### 10. Add Internet Permission
-- Add the following permission to `AndroidManifest.xml`:
-```xml
-<uses-permission android:name="android.permission.INTERNET"/>
-```
 
-### 11. Update `WeatherViewModel`
+### 10. Update `WeatherViewModel`
 - Integrate the API in `WeatherViewModel`.
 - Use coroutines to handle API calls:
 ```kotlin
@@ -167,12 +162,12 @@ fun getData(city: String, days: String) {
 }
 ```
 
-### 12. Observe LiveData in WeatherPage
+### 11. Observe LiveData in WeatherPage
 ```kotlin
 val weatherResult = viewModel.weatherResult.observeAsState()
 ```
 
-### 13. Finally use your API/ Create WeatherDetails Composable
+### 12. Finally use your API/ Create WeatherDetails Composable
 ```kotlin
 @Composable
 fun WeatherDetails(data: WeatherModel) {
@@ -181,7 +176,7 @@ fun WeatherDetails(data: WeatherModel) {
 }
 ```
 
-### 14. (For setting up current location ability) Setup Location Access
+### 13. (For setting up current location ability) Setup Location Access
 #### Permissions
 Add these permissions to `AndroidManifest.xml`:
 ```xml
