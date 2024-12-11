@@ -141,7 +141,8 @@ interface WeatherAPI {
 ### 9. Generate `WeatherModel`
 - Create `WeatherModel.kt` in the `api` package.
 - Paste the JSON response into a Kotlin data class generator.
-- it will populate the api pachage with these...
+- it will populate the api package with these...
+  
   ![APIfolder]( APIFolder.png "API folder")
 
 ### 10. Add Internet Permission
