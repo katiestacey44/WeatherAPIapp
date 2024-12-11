@@ -12,7 +12,7 @@ In this tutorial, you’ll learn to create a Weather App that utilizes Location 
 
 ## Prerequisites
 
-Before starting, ensure you have:
+ Before starting, ensure you have:
 - Android Studio (latest stable version)
 - Basic knowledge of Kotlin and Android development
 - WeatherAPI.com account
