@@ -197,13 +197,6 @@ class MainActivity : ComponentActivity() {
 
 > 🔒 Never commit API keys directly in your code. Use environment variables or a secure configuration file.
 
-## Contributing
-
-Feel free to submit issues and enhancement requests!
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
 
 ---
 Made with ❤️ by Catherine Stacey, Gabbi, Munsong, Blaze Lauer.
