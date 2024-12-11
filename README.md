@@ -1,4 +1,4 @@
- # Android Weather App Tutorial 🌤️
+# Android Weather App Tutorial 🌤️
 
 A comprehensive guide to building a weather application using Android, Kotlin, and modern Android development practices.
 In this tutorial, you’ll learn to create a Weather App that utilizes Location and Context APIs to provide personalized and location-based weather information. We’ll leverage Retrofit libraries to handle network calls efficiently and design a user-friendly app that enhances user engagement with real-time updates through notifications.
