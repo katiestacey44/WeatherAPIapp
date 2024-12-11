@@ -100,21 +100,49 @@ object RetrofitInstance {
 - Create an account, log in, and obtain your API key and base URL.
 - Use the API Explorer to test the API.
 
+    ![APIhome](  APIHOME.png "API home page")
+
+- In the interactive API Explore Paste your API
+- Make sure you format is in JSON
+- And your parameter values are “London”(or any city of your preference) and your days are set to “5”
+- Press show response button
+  ![APIExplore](  APIExplore.png "API explorer page")
+  ![URLCall]( URLCall.png "url call")
+
+- You will get an example URL call
+- The beginning of the call is your base URL call
+
+- The Response body is what the API will be sending to your application
+- It has all the information that you want to display on you app
+- Copy all of this response body section!
+
+
+
+
 ### 8. Create `WeatherAPI` Interface
 ```kotlin
 interface WeatherAPI {
     @GET("/v1/forecast.json")
+// Define a GET request to the forecast endpoint
+// Declare a suspend function to fetch weather data   asynchronously
+
     suspend fun getWeather(
-        @Query("key") apikey: String,
+ // The API key required for authenticating the request
+        @Query("key") apikey: String, 
         @Query("q") city: String,
         @Query("days") days: String
     ): Response<WeatherModel>
 }
+
 ```
+- We want to generate our URL call…
+  ![URLCall]( URLCall.png "url call")
 
 ### 9. Generate `WeatherModel`
 - Create `WeatherModel.kt` in the `api` package.
 - Paste the JSON response into a Kotlin data class generator.
+- it will populate the api pachage with these...
+  ![APIfolder]( APIFolder.png "API folder")
 
 ### 10. Add Internet Permission
 - Add the following permission to `AndroidManifest.xml`:
@@ -143,7 +171,7 @@ fun getData(city: String, days: String) {
 val weatherResult = viewModel.weatherResult.observeAsState()
 ```
 
-### 13. Create WeatherDetails Composable
+### 13. Finally use your API/ Create WeatherDetails Composable
 ```kotlin
 @Composable
 fun WeatherDetails(data: WeatherModel) {
@@ -152,166 +180,7 @@ fun WeatherDetails(data: WeatherModel) {
 }
 ```
 
-### 14. Setup Location Access
-#### Permissions
-Add these permissions to `AndroidManifest.xml`:
-```xml
-<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-```
-
-#### Request Runtime Permissions
-```kotlin
-if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-    != PackageManager.PERMISSION_GRANTED) {
-    ActivityCompat.requestPermissions(
-        this,
-        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-        LOCATION_PERMISSION_REQUEST_CODE
-    )
-}
-```
-
-#### Setup Fused Location Provider
-```kotlin
-val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
-fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
-    if (location != null) {
-        val latitude = location.latitude
-        val longitude = location.longitude
-        Log.d("Location", "Latitude: $latitude, Longitude: $longitude")
-    } else {
-        Log.d("Location", "No location found")
-    }
-}
-```
-
-#### Handle Permission Response
-```kotlin
-override fun onRequestPermissionsResult(
-    requestCode: Int,
-    permissions: Array<out String>,
-    grantResults: IntArray
-) {
-    super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            // Permission granted
-        } else {
-            // Permission denied
-        }
-    }
-}
-```
-
----
-
-## Conclusion
-This tutorial covers creating a weather app with a modern Android stack. Explore additional features like notifications or data storage for more functionality.
-
-
-### 1. Create a New Project
-- Open Android Studio.
-- Create a new project with Jetpack Compose support.
-
-### 2. Create Weather Page Composable
-```kotlin
-fun WeatherPage(viewModel: WeatherViewModel) {
-    // Your WeatherPage implementation here
-}
-```
-
-### 3. Create ViewModel in Main Activity
-- Instantiate `WeatherViewModel` in your `MainActivity`.
-
-### 4. Create Search Bar
-- Add a search bar using any method you prefer.
-
-### 5. Create WeatherViewModel and Data Function
-- Define `WeatherViewModel`.
-- Create a function to fetch data:
-```kotlin
-fun getData(city: String) {
-    // Fetch weather data
-}
-```
-
-### 6. Create `api` Package
-- For better organization, create a package named `api`.
-
-#### Create `RetrofitInstance`
-```kotlin
-object RetrofitInstance {
-    private fun getInstance(): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(YourBaseURL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-    }
-
-    val weatherApi: WeatherAPI = getInstance().create(WeatherAPI::class.java)
-}
-```
-
-### 7. Obtain API Key and Base URL
-- Go to [WeatherAPI](https://www.weatherapi.com/).
-- Create an account, log in, and obtain your API key and base URL.
-- Use the API Explorer to test the API.
-
-### 8. Create `WeatherAPI` Interface
-```kotlin
-interface WeatherAPI {
-    @GET("/v1/forecast.json")
-    suspend fun getWeather(
-        @Query("key") apikey: String,
-        @Query("q") city: String,
-        @Query("days") days: String
-    ): Response<WeatherModel>
-}
-```
-
-### 9. Generate `WeatherModel`
-- Create `WeatherModel.kt` in the `api` package.
-- Paste the JSON response into a Kotlin data class generator.
-
-### 10. Add Internet Permission
-- Add the following permission to `AndroidManifest.xml`:
-```xml
-<uses-permission android:name="android.permission.INTERNET"/>
-```
-
-### 11. Update `WeatherViewModel`
-- Integrate the API in `WeatherViewModel`.
-- Use coroutines to handle API calls:
-```kotlin
-fun getData(city: String, days: String) {
-    viewModelScope.launch {
-        val response = weatherApi.getWeather(YOUR_API_KEY, city, days)
-        if (response.isSuccessful) {
-            // Process the response
-        } else {
-            // Handle errors
-        }
-    }
-}
-```
-
-### 12. Observe LiveData in WeatherPage
-```kotlin
-val weatherResult = viewModel.weatherResult.observeAsState()
-```
-
-### 13. Create WeatherDetails Composable
-```kotlin
-@Composable
-fun WeatherDetails(data: WeatherModel) {
-    Text(text = data.location.name, fontSize = 30.sp)
-    Text(text = "${data.current.temp_f}°F", fontSize = 56.sp)
-}
-```
-
-### 14. Setup Location Access
+### 14. (usig current location) Setup Location Access
 #### Permissions
 Add these permissions to `AndroidManifest.xml`:
 ```xml
