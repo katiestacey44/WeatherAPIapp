@@ -206,4 +206,4 @@ Feel free to submit issues and enhancement requests!
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
 
 ---
-Made with ❤️ by [Your Name]
+Made with ❤️ by Catherine Stacey, Gabbi, Munsong, Blaze Lauer
